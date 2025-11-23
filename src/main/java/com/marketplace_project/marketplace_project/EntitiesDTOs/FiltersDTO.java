@@ -16,7 +16,7 @@ public class FiltersDTO {
             @JsonFormat(pattern = "yyyy-MM-dd", timezone = "UTC") Date to
     ) {}
 
-    public record IdStringFilter(String id) {}
+    public record IdFilter(Integer id) {}
 
     public record LastNameFilter(String lastname) {}
 

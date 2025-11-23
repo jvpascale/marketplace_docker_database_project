@@ -16,7 +16,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<OrderDTO> getOrdersByUser(String userId){
+    public List<OrderDTO> getOrdersByUser(Integer userId){
         return orderRepository.getOrdersByUser(userId);
     }
 

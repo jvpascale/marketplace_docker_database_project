@@ -3,8 +3,9 @@ package com.marketplace_project.marketplace_project.Controllers;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.UserDTO;
 // Importamos os Records específicos do FiltersDTO
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.BuyerFilter;
-import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdStringFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.LastNameFilter;
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdFilter;
+
 
 import com.marketplace_project.marketplace_project.Services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,7 @@ public class UserController {
     // JSON Esperado: { "id": "123" }
     // ============================================================
     @PostMapping("/buyers/price")
-    public ResponseEntity<UserDTO> getBuyerUsersByOrderPrice(@RequestBody IdStringFilter filter) {
+    public ResponseEntity<UserDTO> getBuyerUsersByOrderPrice(@RequestBody IdFilter filter) {
         UserDTO user = userService.getBuyerUsersByOrderPrice(filter.id());
 
         if (user == null) {

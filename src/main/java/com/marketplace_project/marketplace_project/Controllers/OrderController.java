@@ -1,9 +1,10 @@
 package com.marketplace_project.marketplace_project.Controllers;
 
 import com.marketplace_project.marketplace_project.Entities.Departament;
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.OrderDTO;
 // Importamos os Records específicos do FiltersDTO
-import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdStringFilter;
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.CpfFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.PriceFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.LocalizationDateFilter;
@@ -33,7 +34,7 @@ public class OrderController {
     // JSON: { "userId": 123 }
     // ============================================================
     @PostMapping("/user")
-    public ResponseEntity<List<OrderDTO>> getOrdersByUser(@RequestBody IdStringFilter filter) {
+    public ResponseEntity<List<OrderDTO>> getOrdersByUser(@RequestBody IdFilter filter) {
         return ResponseEntity.ok(
                 orderService.getOrdersByUser(filter.id())
         );

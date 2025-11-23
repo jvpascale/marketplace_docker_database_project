@@ -22,7 +22,7 @@ public class OrderRepository {
     // ============================================================
     // Busca Pedidos onde o usuário é Comprador OU Vendedor
     // ============================================================
-    public List<OrderDTO> getOrdersByUser(String userId) {
+    public List<OrderDTO> getOrdersByUser(Integer userId) {
         // Nota: Removi as flags booleanas pois o seu SQL já verifica os dois casos com OR.
         // Se o ID aparecer na coluna vendedor OU na coluna comprador, ele traz.
         String sql = """

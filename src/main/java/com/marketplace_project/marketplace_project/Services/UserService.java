@@ -21,7 +21,7 @@ public class UserService {
         return userRepository.getAllUsers();
     }
 
-    public UserDTO getBuyerUsersByOrderPrice(String id){
+    public UserDTO getBuyerUsersByOrderPrice(Integer id){
         return userRepository.getUserById(id);
     }
 

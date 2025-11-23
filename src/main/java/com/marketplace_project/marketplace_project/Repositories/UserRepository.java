@@ -37,7 +37,7 @@ public class UserRepository {
      * 2) Buscar um usuário pelo ID
      * Retorna null se não encontrar (igual ao seu código original)
      */
-    public UserDTO getUserById(String id) {
+    public UserDTO getUserById(Integer id) {
         String query_sql = """
             SELECT 
                 U.id,
