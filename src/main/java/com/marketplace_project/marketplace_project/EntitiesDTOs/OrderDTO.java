@@ -9,9 +9,9 @@ public class OrderDTO {
     private String status;
     private Date creationDate;
 
-    private String buyerId;
-    private String sellerId;
-    private Integer employeeCpf;
+    private Integer buyerId;
+    private Integer sellerId;
+    private String employeeCpf;
 
 
     private String paymentMethod;
@@ -67,27 +67,27 @@ public class OrderDTO {
         this.creationDate = creationDate;
     }
 
-    public String getBuyerId() {
+    public Integer getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(String buyerId) {
+    public void setBuyerId(Integer buyerId) {
         this.buyerId = buyerId;
     }
 
-    public String getSellerId() {
+    public Integer getSellerId() {
         return sellerId;
     }
 
-    public void setSellerId(String sellerId) {
+    public void setSellerId(Integer sellerId) {
         this.sellerId = sellerId;
     }
 
-    public Integer getEmployeeCpf() {
+    public String getEmployeeCpf() {
         return employeeCpf;
     }
 
-    public void setEmployeeCpf(Integer employeeCpf) {
+    public void setEmployeeCpf(String employeeCpf) {
         this.employeeCpf = employeeCpf;
     }
 

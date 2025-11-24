@@ -20,7 +20,7 @@ public class OrderService {
         return orderRepository.getOrdersByUser(userId);
     }
 
-    public List<OrderDTO> getOrdersByCpfEmployee(Integer cpf){
+    public List<OrderDTO> getOrdersByCpfEmployee(String cpf){
         return orderRepository.getOrdersByCpfEmployee(cpf);
     }
 

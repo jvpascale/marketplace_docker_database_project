@@ -2,25 +2,25 @@ package com.marketplace_project.marketplace_project.Entities;
 
 public class User {
 
-    private String id;
+    private Integer id;
     private String address;
     private String first_name;
     private String last_name;
 
     public User(){}
 
-    public User(String id, String last_name, String first_name, String address) {
+    public User(Integer id, String last_name, String first_name, String address) {
         this.id = id;
         this.last_name = last_name;
         this.first_name = first_name;
         this.address = address;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

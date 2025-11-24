@@ -41,7 +41,7 @@ public class DepartamentRepository {
                     dto.setLocalization(rs.getString("localizacao"));
                     dto.setNumber(rs.getInt("numero"));
                     dto.setName(rs.getString("nome"));
-                    dto.setCpf_manager(rs.getInt("gerente_cpf"));
+                    dto.setCpf_manager(rs.getString("gerente_cpf"));
                     return dto;
                 },
                 minEmployeesQuantity, // Parametro 1 (?)
@@ -77,7 +77,7 @@ public class DepartamentRepository {
                 origem.setLocalization(rs.getString("origem_localizacao"));
                 origem.setNumber(rs.getInt("origem_numero"));
                 origem.setName(rs.getString("origem_nome"));
-                origem.setCpf_manager(rs.getInt("origem_gerente_cpf"));
+                origem.setCpf_manager(rs.getString("origem_gerente_cpf"));
                 results.add(origem);
 
                 // Mapeia a Unidade de Destino
@@ -85,7 +85,7 @@ public class DepartamentRepository {
                 destino.setLocalization(rs.getString("destino_localizacao"));
                 destino.setNumber(rs.getInt("destino_numero"));
                 destino.setName(rs.getString("destino_nome"));
-                destino.setCpf_manager(rs.getInt("destino_gerente_cpf"));
+                destino.setCpf_manager(rs.getString("destino_gerente_cpf"));
                 results.add(destino);
             }
             return results;
@@ -104,7 +104,7 @@ public class DepartamentRepository {
             LEFT JOIN Pedidos P
                 ON U.localizacao = P.origem_localizacao
                 OR U.localizacao = P.destino_localizacao
-            WHERE P.data BETWEEN ? AND ?
+            WHERE P.data_de_entrega BETWEEN ? AND ?
             GROUP BY U.localizacao, U.numero, U.nome, U.gerente_cpf
             HAVING COUNT(P.codigo) BETWEEN ? AND ?
         """;
@@ -116,7 +116,7 @@ public class DepartamentRepository {
                     dto.setLocalization(rs.getString("localizacao"));
                     dto.setNumber(rs.getInt("numero"));
                     dto.setName(rs.getString("nome"));
-                    dto.setCpf_manager(rs.getInt("gerente_cpf"));
+                    dto.setCpf_manager(rs.getString("gerente_cpf"));
                     return dto;
                 },
                 // Parametros na ordem dos (?)

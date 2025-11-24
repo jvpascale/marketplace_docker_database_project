@@ -4,11 +4,11 @@ public class DependentDTO {
     private String name;
     private Integer age;
     private String kinship;
-    private Integer cpf_employee;
+    private String cpf_employee;
 
     public DependentDTO(){}
 
-    public DependentDTO(String name, Integer age, String kinship, Integer cpf_employee) {
+    public DependentDTO(String name, Integer age, String kinship, String cpf_employee) {
         this.name = name;
         this.age = age;
         this.kinship = kinship;
@@ -39,11 +39,11 @@ public class DependentDTO {
         this.age = age;
     }
 
-    public Integer getCpfEmployee() {
+    public String getCpfEmployee() {
         return cpf_employee;
     }
 
-    public void setCpfEmployee(Integer cpf_employee) {
+    public void setCpfEmployee(String cpf_employee) {
         this.cpf_employee = cpf_employee;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -15,6 +16,39 @@ public class UserRepository {
 
     public UserRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    /**
+     * 4) Buscar compradores por Categoria, Nome e Data
+     * Essa query é complexa: cruza Usuário -> Pedidos -> Produtos -> Categoria
+     */
+    public List<UserDTO> getBuyerUsersByOrderCategoryAndDate(String category, String name, Date fromTime, Date toTime) {
+        String sql = """
+            SELECT DISTINCT
+                U.id,
+                U.endereco,
+                U.p_nome,
+                U.sobrenome
+            FROM Usuario U
+            INNER JOIN Pedidos P ON U.id = P.comprador_id
+            INNER JOIN Produto_Contem_Pedidos PCP ON P.codigo = PCP.pedido_codigo
+            INNER JOIN Produto PR ON PCP.produto_id = PR.id
+            WHERE 
+                PR.categoria = ?
+                AND U.p_nome ILIKE ?  -- ILIKE faz busca case-insensitive (joao acha Joao)
+                AND P.data_de_criacao BETWEEN ? AND ?
+        """;
+
+        // Dica: Para o nome, geralmente queremos buscar "contém" ou "igual".
+        // Vou assumir busca exata ou parcial. Se quiser parcial use "%" + name + "%"
+        return jdbcTemplate.query(
+                sql,
+                this::mapRowToDto,
+                category,
+                name,
+                fromTime,
+                toTime
+        );
     }
 
     /**

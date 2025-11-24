@@ -16,7 +16,7 @@ public class DependentService {
     }
 
     // 1. Busca dependentes por CPF do funcionário
-    public List<DependentDTO> getDependentsByEmployee(Integer employeeCpf) {
+    public List<DependentDTO> getDependentsByEmployee(String employeeCpf) {
         return dependentRepository.getDependentsByEmployee(employeeCpf);
     }
 

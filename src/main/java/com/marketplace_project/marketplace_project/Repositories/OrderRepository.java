@@ -43,7 +43,7 @@ public class OrderRepository {
     // ============================================================
     // Busca Pedidos por CPF do Funcionário responsável
     // ============================================================
-    public List<OrderDTO> getOrdersByCpfEmployee(Integer cpf){
+    public List<OrderDTO> getOrdersByCpfEmployee(String cpf){
         String sql = """
            SELECT 
             P.codigo, P.status, P.data_de_criacao, P.valor_total,
@@ -133,8 +133,8 @@ public class OrderRepository {
         dto.setStatus(rs.getString("status"));
         dto.setCreationDate(rs.getDate("data_de_criacao"));
         dto.setTotalValue(rs.getFloat("valor_total"));
-        dto.setBuyerId(rs.getString("comprador_id"));
-        dto.setSellerId(rs.getString("vendedor_id"));
+        dto.setBuyerId(rs.getInt("comprador_id"));
+        dto.setSellerId(rs.getInt("vendedor_id"));
         dto.setPaymentMethod(rs.getString("meio_de_pagamento"));
         dto.setInstallments(rs.getInt("numero_de_parcelas"));
         dto.setDestinationLocalization(rs.getString("destino_localizacao"));
@@ -146,7 +146,7 @@ public class OrderRepository {
         dto.setDestinationArrivalFlag(rs.getBoolean("d_flag_chegada"));
         dto.setDestinationDate(rs.getDate("d_data"));
 
-        dto.setEmployeeCpf(rs.getInt("funcionario_cpf"));
+        dto.setEmployeeCpf(rs.getString("funcionario_cpf"));
         dto.setVehiclePlate(rs.getString("placa_do_veiculo"));
         dto.setDeliveryDate(rs.getDate("data_de_entrega"));
         dto.setEstimatedDeliveryDate(rs.getDate("previsao_de_entrega"));

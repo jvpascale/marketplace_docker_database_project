@@ -82,7 +82,7 @@ public class EmployeeRepository {
             FROM Funcionario AS F
             LEFT JOIN Pedidos P
                 ON F.cpf = P.funcionario_cpf
-            WHERE P.data_entrega BETWEEN ? AND ?
+            WHERE P.data_de_entrega BETWEEN ? AND ?
             GROUP BY F.cpf
             HAVING count(P.codigo) BETWEEN ? AND ?
         """;
@@ -106,12 +106,12 @@ public class EmployeeRepository {
     // ============================================================
     private EmployeeDTO mapRowToDto(ResultSet rs, int rowNum) throws SQLException {
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setCpf(rs.getInt("cpf"));
+        dto.setCpf(rs.getString("cpf"));
         dto.setSalary(rs.getFloat("salario"));
         dto.setName(rs.getString("nome"));
         dto.setRole(rs.getString("cargo"));
         dto.setDepartament_localization(rs.getString("unidade_localizacao"));
-        dto.setCpf_manager(rs.getInt("supervisor_cpf"));
+        dto.setCpf_manager(rs.getString("supervisor_cpf"));
         return dto;
     }
 }

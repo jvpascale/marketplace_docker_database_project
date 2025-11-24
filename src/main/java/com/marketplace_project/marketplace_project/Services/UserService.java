@@ -18,7 +18,7 @@ public class UserService {
     }
 
     public List<UserDTO> getBuyerUsersByOrderCategoryAndDate(String category, String name, Date fromTime, Date toTime){
-        return userRepository.getAllUsers();
+        return userRepository.getBuyerUsersByOrderCategoryAndDate(category,name,fromTime,toTime);
     }
 
     public UserDTO getBuyerUsersByOrderPrice(Integer id){

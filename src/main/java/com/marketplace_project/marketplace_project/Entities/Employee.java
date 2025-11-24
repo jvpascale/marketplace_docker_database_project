@@ -5,13 +5,13 @@ public class Employee {
     private String role;
     private String name;
     private Float salary;
-    private Integer cpf;
+    private String cpf;
     private String departament_localization;
     private Integer cpf_manager;
 
     public Employee(){}
 
-    public Employee(String role, Integer cpf, Float salary, String name,String departament_localization, Integer cpf_manager) {
+    public Employee(String role, String cpf, Float salary, String name,String departament_localization, Integer cpf_manager) {
         this.role = role;
         this.cpf = cpf;
         this.salary = salary;
@@ -36,11 +36,11 @@ public class Employee {
         this.departament_localization = departament_localization;
     }
 
-    public Integer getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(Integer cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 

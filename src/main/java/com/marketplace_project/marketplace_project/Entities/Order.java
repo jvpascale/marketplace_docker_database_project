@@ -9,8 +9,8 @@ public class Order {
     private String status;
     private Date creationDate;
 
-    private String buyerId;
-    private String sellerId;
+    private Integer buyerId;
+    private Integer sellerId;
     private Integer employeeCpf;
 
 
@@ -67,19 +67,19 @@ public class Order {
         this.creationDate = creationDate;
     }
 
-    public String getBuyerId() {
+    public Integer getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(String buyerId) {
+    public void setBuyerId(Integer buyerId) {
         this.buyerId = buyerId;
     }
 
-    public String getSellerId() {
+    public Integer getSellerId() {
         return sellerId;
     }
 
-    public void setSellerId(String sellerId) {
+    public void setSellerId(Integer sellerId) {
         this.sellerId = sellerId;
     }
 

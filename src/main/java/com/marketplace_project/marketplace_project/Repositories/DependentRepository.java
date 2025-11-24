@@ -20,7 +20,7 @@ public class DependentRepository {
     // ============================================================
     // Query 1: Dependentes de um funcionário pelo CPF
     // ============================================================
-    public List<DependentDTO> getDependentsByEmployee(Integer employeeCpf) {
+    public List<DependentDTO> getDependentsByEmployee(String employeeCpf) {
         String sql = """
             SELECT 
                 nome, 
@@ -84,7 +84,7 @@ public class DependentRepository {
         dep.setName(rs.getString("nome"));
         dep.setAge(rs.getInt("idade"));
         dep.setKinship(rs.getString("parentesco"));
-        dep.setCpfEmployee(rs.getInt("funcionario_cpf"));
+        dep.setCpfEmployee(rs.getString("funcionario_cpf"));
         return dep;
     }
 }

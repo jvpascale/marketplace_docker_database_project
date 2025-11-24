@@ -5,13 +5,13 @@ public class EmployeeDTO {
     private String role;
     private String name;
     private Float salary;
-    private Integer cpf;
+    private String cpf;
     private String departament_localization;
-    private Integer cpf_manager;
+    private String cpf_manager;
 
     public EmployeeDTO(){}
 
-    public EmployeeDTO(String role, Integer cpf, Float salary, String name,String departament_localization, Integer cpf_manager) {
+    public EmployeeDTO(String role, String cpf, Float salary, String name,String departament_localization, String cpf_manager) {
         this.role = role;
         this.cpf = cpf;
         this.salary = salary;
@@ -20,11 +20,11 @@ public class EmployeeDTO {
         this.departament_localization = departament_localization;
     }
 
-    public Integer getCpf_manager() {
+    public String getCpf_manager() {
         return cpf_manager;
     }
 
-    public void setCpf_manager(Integer cpf_manager) {
+    public void setCpf_manager(String cpf_manager) {
         this.cpf_manager = cpf_manager;
     }
 
@@ -36,11 +36,11 @@ public class EmployeeDTO {
         this.departament_localization = departament_localization;
     }
 
-    public Integer getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(Integer cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 

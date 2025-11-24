@@ -36,14 +36,14 @@ public class FiltersDTO {
 
     public record PriceFilter(Float minPrice, Float maxPrice) {}
 
-    public record SellerFilter(String sellerId) {}
+    public record SellerFilter(Integer sellerId) {}
 
 
     // ==========================================
     // Filtros para ORDERS
     // ==========================================
 
-    public record CpfFilter(Integer cpf) {}
+    public record CpfFilter(String cpf) {}
 
     public record LocalizationDateFilter(
             String localization,
@@ -64,14 +64,14 @@ public class FiltersDTO {
 
     public record LocalizationFilter(String localization) {}
 
-    public record SupervisorCpfFilter(Integer supervisorCpf) {}
+    public record SupervisorCpfFilter(String supervisorCpf) {}
 
 
     // ==========================================
     // Filtros para DEPENDENTS
     // ==========================================
 
-    public record EmployeeCpfFilter(Integer employeeCpf) {}
+    public record EmployeeCpfFilter(String employeeCpf) {}
 
     public record UnitLocalizationFilter(String unitLocalization) {}
 
