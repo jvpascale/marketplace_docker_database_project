@@ -28,12 +28,12 @@ public class DependentRepository {
                 parentesco, 
                 funcionario_cpf
             FROM Dependente
-            WHERE funcionario_cpf = ?
+            WHERE funcionario_cpf LIKE ?
+            ORDER BY nome ASC
         """;
 
-        // Passamos o SQL, o mapeador (método auxiliar abaixo) e o parâmetro (?)
-        // Nota: O Spring converte automaticamente o String employeeCpf para o tipo do banco se for numérico
-        return jdbcTemplate.query(sql, this::mapRowToDto, employeeCpf);
+        // Adicionei os "%" para permitir busca parcial no CPF (ex: digitar o final e achar)
+        return jdbcTemplate.query(sql, this::mapRowToDto, "%" + employeeCpf + "%");
     }
 
     // ============================================================
@@ -47,8 +47,9 @@ public class DependentRepository {
                 parentesco,
                 funcionario_cpf
             FROM Dependente
-            WHERE parentesco IN ('FILHO', 'FILHA') 
+            WHERE parentesco IN ('Filho', 'Filha') 
               AND idade < 18
+            ORDER BY nome ASC
         """;
 
         return jdbcTemplate.query(sql, this::mapRowToDto);
@@ -69,15 +70,16 @@ public class DependentRepository {
             FROM Dependente AS D
             INNER JOIN Funcionario AS F 
                 ON D.funcionario_cpf = F.cpf
-            WHERE F.unidade_localizacao = ?
+            WHERE F.unidade_localizacao ILIKE ?
+            ORDER BY D.nome ASC
         """;
 
-        return jdbcTemplate.query(sql, this::mapRowToDto, unitLocalization);
+        // Adicionei os "%" para filtrar partes do nome da localização (ex: "sao" acha "São Paulo")
+        return jdbcTemplate.query(sql, this::mapRowToDto, "%" + unitLocalization + "%");
     }
 
     // ============================================================
     // Método Auxiliar (RowMapper)
-    // Evita repetir o bloco "while(rs.next()) { new DTO... }" 3 vezes
     // ============================================================
     private DependentDTO mapRowToDto(ResultSet rs, int rowNum) throws SQLException {
         DependentDTO dep = new DependentDTO();

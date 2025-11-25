@@ -31,6 +31,7 @@ public class DepartamentRepository {
                 ON F.unidade_localizacao = U.localizacao
             GROUP BY U.localizacao, U.numero, U.nome, U.gerente_cpf
             HAVING COUNT(F.cpf) BETWEEN ? AND ?
+            ORDER BY U.localizacao ASC
         """;
 
         // O jdbcTemplate.query executa o SQL, passa os parametros e mapeia o resultado linha por linha
@@ -64,9 +65,10 @@ public class DepartamentRepository {
             INNER JOIN Unidade AS O ON P.origem_localizacao = O.localizacao
             INNER JOIN Unidade AS D ON P.destino_localizacao = D.localizacao
             WHERE P.codigo = ?
+            ORDER BY P.codigo ASC
         """;
 
-        // Aqui usamos 'query' com ResultSetExtractor, pois uma única linha do banco
+        // Aqui usamos 'query' com ResultSetExtractor, pois uma Ãºnica linha do banco
         // vai gerar DOIS objetos na lista (Origem e Destino)
         return jdbcTemplate.query(query_sql, rs -> {
             List<DepartamentDTO> results = new ArrayList<>();
@@ -107,6 +109,7 @@ public class DepartamentRepository {
             WHERE P.data_de_entrega BETWEEN ? AND ?
             GROUP BY U.localizacao, U.numero, U.nome, U.gerente_cpf
             HAVING COUNT(P.codigo) BETWEEN ? AND ?
+            ORDER BY U.localizacao ASC
         """;
 
         return jdbcTemplate.query(

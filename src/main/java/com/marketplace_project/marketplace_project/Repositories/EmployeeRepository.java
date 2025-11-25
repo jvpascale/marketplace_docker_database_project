@@ -24,6 +24,7 @@ public class EmployeeRepository {
     // Busca funcionários por Departamento (Localização)
     // ============================================================
     public List<EmployeeDTO> getEmployeesByDepartament(Departament departament) {
+        // Alterado para ILIKE (Case Insensitive) e ordenado por nome
         String sql = """
             SELECT 
                 F.cpf,
@@ -33,13 +34,14 @@ public class EmployeeRepository {
                 F.unidade_localizacao,
                 F.supervisor_cpf
             FROM Funcionario AS F
-            WHERE F.unidade_localizacao = ?
+            WHERE F.unidade_localizacao ILIKE ?
+            ORDER BY F.nome ASC
         """;
 
         return jdbcTemplate.query(
                 sql,
                 this::mapRowToDto,
-                departament.getLocalization() // Parâmetro 1
+                "%" + departament.getLocalization() + "%" // Adicionado % para busca parcial
         );
     }
 
@@ -47,6 +49,8 @@ public class EmployeeRepository {
     // Busca funcionários por Supervisor
     // ============================================================
     public List<EmployeeDTO> getEmployeesBySupervisior(Employee supervisior) {
+        // Usamos LIKE aqui. Se o supervisor tiver CPF "123.456...",
+        // buscar por "123" vai trazer os subordinados dele.
         String sql = """
             SELECT
                 F.cpf,
@@ -56,13 +60,14 @@ public class EmployeeRepository {
                 F.unidade_localizacao,
                 F.supervisor_cpf
             FROM Funcionario AS F
-            WHERE F.supervisor_cpf = ?
+            WHERE F.supervisor_cpf LIKE ?
+            ORDER BY F.nome ASC
         """;
 
         return jdbcTemplate.query(
                 sql,
                 this::mapRowToDto,
-                supervisior.getCpf() // Parâmetro 1
+                "%" + supervisior.getCpf() + "%" // Adicionado % para busca parcial
         );
     }
 
@@ -70,6 +75,8 @@ public class EmployeeRepository {
     // Busca funcionários por produtividade (pedidos entregues em data)
     // ============================================================
     public List<EmployeeDTO> getEmployeesByNumberOfOrdersDeliveredInDate(Integer minOrdersDelivered, Integer maxOrdersDelivered, Date fromTime, Date toTime) {
+        // Aqui os filtros WHERE são de data (não usa LIKE),
+        // mas adicionei a ordenação no final.
         String query_sql = """
             SELECT
                 F.cpf,
@@ -83,12 +90,14 @@ public class EmployeeRepository {
             LEFT JOIN Pedidos P
                 ON F.cpf = P.funcionario_cpf
             WHERE P.data_de_entrega BETWEEN ? AND ?
-            GROUP BY F.cpf
+            GROUP BY F.cpf, F.salario, F.nome, F.cargo, F.unidade_localizacao, F.supervisor_cpf
             HAVING count(P.codigo) BETWEEN ? AND ?
+            ORDER BY F.nome ASC
         """;
 
-        // Nota: Mesmo que o SQL retorne 'quantidade_pedidos', seu DTO original
-        // não mapeava esse campo, então mantive o mapeamento padrão do Employee.
+        // Nota técnica: Adicionei os campos do SELECT no GROUP BY para garantir
+        // compatibilidade com regras estritas de SQL (Full Group By), além de ordenar.
+
         return jdbcTemplate.query(
                 query_sql,
                 this::mapRowToDto,
@@ -102,7 +111,6 @@ public class EmployeeRepository {
 
     // ============================================================
     // Método Auxiliar de Mapeamento (RowMapper)
-    // Reaproveitado por todos os métodos acima
     // ============================================================
     private EmployeeDTO mapRowToDto(ResultSet rs, int rowNum) throws SQLException {
         EmployeeDTO dto = new EmployeeDTO();

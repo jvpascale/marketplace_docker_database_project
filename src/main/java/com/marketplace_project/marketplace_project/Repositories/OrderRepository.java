@@ -23,8 +23,8 @@ public class OrderRepository {
     // Busca Pedidos onde o usuário é Comprador OU Vendedor
     // ============================================================
     public List<OrderDTO> getOrdersByUser(Integer userId) {
-        // Nota: Removi as flags booleanas pois o seu SQL já verifica os dois casos com OR.
-        // Se o ID aparecer na coluna vendedor OU na coluna comprador, ele traz.
+        // IDs são números exatos, então mantemos a comparação =,
+        // mas adicionamos a ordenação.
         String sql = """
            SELECT 
             P.codigo, P.status, P.data_de_criacao, P.valor_total,
@@ -35,6 +35,7 @@ public class OrderRepository {
             P.data_de_entrega, P.previsao_de_entrega
            FROM Pedidos AS P
            WHERE P.vendedor_id = ? OR P.comprador_id = ?
+           ORDER BY P.codigo ASC
         """;
 
         return jdbcTemplate.query(sql, this::mapRowToDto, userId, userId);
@@ -44,6 +45,7 @@ public class OrderRepository {
     // Busca Pedidos por CPF do Funcionário responsável
     // ============================================================
     public List<OrderDTO> getOrdersByCpfEmployee(String cpf){
+        // Alterado para LIKE para permitir busca parcial do CPF
         String sql = """
            SELECT 
             P.codigo, P.status, P.data_de_criacao, P.valor_total,
@@ -53,10 +55,11 @@ public class OrderRepository {
             P.funcionario_cpf, P.placa_do_veiculo,
             P.data_de_entrega, P.previsao_de_entrega
            FROM Pedidos AS P
-           WHERE P.funcionario_cpf = ?
+           WHERE P.funcionario_cpf LIKE ?
+           ORDER BY P.codigo ASC
         """;
 
-        return jdbcTemplate.query(sql, this::mapRowToDto, cpf);
+        return jdbcTemplate.query(sql, this::mapRowToDto, "%" + cpf + "%");
     }
 
     // ============================================================
@@ -73,6 +76,7 @@ public class OrderRepository {
             P.data_de_entrega, P.previsao_de_entrega
            FROM Pedidos AS P
            WHERE P.valor_total > ? AND P.valor_total < ?
+           ORDER BY P.codigo ASC
         """;
 
         return jdbcTemplate.query(sql, this::mapRowToDto, minPrice, maxPrice);
@@ -82,8 +86,7 @@ public class OrderRepository {
     // Busca Pedidos por Departamento (Destino) e Data
     // ============================================================
     public List<OrderDTO> getOrdersByDepartamentAndDate(Departament departament, Date fromTime, Date toTime){
-        // CORREÇÃO: Adicionei "AND U.localizacao = ?" ao final,
-        // senão ele pegaria pedidos de todos os departamentos.
+        // Alterado para ILIKE para ignorar Case Sensitive na Localização
         String sql = """
            SELECT 
             P.codigo, P.status, P.data_de_criacao, P.valor_total,
@@ -97,16 +100,24 @@ public class OrderRepository {
                 ON U.localizacao = P.destino_localizacao
            WHERE P.data_de_entrega > ? 
              AND P.data_de_entrega < ?
-             AND U.localizacao = ? 
+             AND U.localizacao ILIKE ? 
+           ORDER BY P.codigo ASC
         """;
 
-        return jdbcTemplate.query(sql, this::mapRowToDto, fromTime, toTime, departament.getLocalization());
+        return jdbcTemplate.query(
+                sql,
+                this::mapRowToDto,
+                fromTime,
+                toTime,
+                "%" + departament.getLocalization() + "%"
+        );
     }
 
     // ============================================================
     // Busca Pedidos por Status e Data
     // ============================================================
     public List<OrderDTO> getOrdersByStatusAndDate(String orderStatus, Date fromTime, Date toTime){
+        // Alterado para ILIKE (ex: busca 'entregue' acha 'ENTREGUE')
         String sql = """
            SELECT 
             P.codigo, P.status, P.data_de_criacao, P.valor_total,
@@ -118,14 +129,21 @@ public class OrderRepository {
            FROM Pedidos AS P
            WHERE P.data_de_entrega > ? 
              AND P.data_de_entrega < ?
-             AND P.status = ?
+             AND P.status ILIKE ?
+           ORDER BY P.codigo ASC
         """;
 
-        return jdbcTemplate.query(sql, this::mapRowToDto, fromTime, toTime, orderStatus);
+        return jdbcTemplate.query(
+                sql,
+                this::mapRowToDto,
+                fromTime,
+                toTime,
+                "%" + orderStatus + "%"
+        );
     }
 
     // ============================================================
-    // MAPPER GERAL (Salva centenas de linhas de código repetido)
+    // MAPPER GERAL
     // ============================================================
     private OrderDTO mapRowToDto(ResultSet rs, int rowNum) throws SQLException {
         OrderDTO dto = new OrderDTO();
@@ -140,7 +158,6 @@ public class OrderRepository {
         dto.setDestinationLocalization(rs.getString("destino_localizacao"));
         dto.setOriginLocalization(rs.getString("origem_localizacao"));
 
-        // Flags booleanas (assumindo que no banco sejam BOOLEAN ou BIT)
         dto.setOriginArrivalFlag(rs.getBoolean("o_flag_chegada"));
         dto.setOriginDate(rs.getDate("o_data"));
         dto.setDestinationArrivalFlag(rs.getBoolean("d_flag_chegada"));

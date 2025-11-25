@@ -20,9 +20,10 @@ public class UserRepository {
 
     /**
      * 4) Buscar compradores por Categoria, Nome e Data
-     * Essa query é complexa: cruza Usuário -> Pedidos -> Produtos -> Categoria
      */
     public List<UserDTO> getBuyerUsersByOrderCategoryAndDate(String category, String name, Date fromTime, Date toTime) {
+        // Alterado PR.categoria para ILIKE
+        // Adicionado ORDER BY pelo nome do usuário
         String sql = """
             SELECT DISTINCT
                 U.id,
@@ -34,18 +35,17 @@ public class UserRepository {
             INNER JOIN Produto_Contem_Pedidos PCP ON P.codigo = PCP.pedido_codigo
             INNER JOIN Produto PR ON PCP.produto_id = PR.id
             WHERE 
-                PR.categoria = ?
-                AND U.p_nome ILIKE ?  -- ILIKE faz busca case-insensitive (joao acha Joao)
+                PR.categoria ILIKE ?
+                AND U.p_nome ILIKE ?
                 AND P.data_de_criacao BETWEEN ? AND ?
+            ORDER BY U.p_nome ASC
         """;
 
-        // Dica: Para o nome, geralmente queremos buscar "contém" ou "igual".
-        // Vou assumir busca exata ou parcial. Se quiser parcial use "%" + name + "%"
         return jdbcTemplate.query(
                 sql,
                 this::mapRowToDto,
-                category,
-                name,
+                "%" + category + "%", // Busca categoria parcial (ex: "eletron" acha "Eletrônicos")
+                "%" + name + "%",     // Busca nome parcial
                 fromTime,
                 toTime
         );
@@ -55,6 +55,7 @@ public class UserRepository {
      * 1) Buscar todos os usuários
      */
     public List<UserDTO> getAllUsers() {
+        // Adicionado ORDER BY ID para manter a lista consistente
         String query_sql = """
             SELECT 
                 U.id,
@@ -62,6 +63,7 @@ public class UserRepository {
                 U.p_nome,
                 U.sobrenome
             FROM Usuario AS U
+            ORDER BY U.id ASC
         """;
 
         return jdbcTemplate.query(query_sql, this::mapRowToDto);
@@ -69,9 +71,9 @@ public class UserRepository {
 
     /**
      * 2) Buscar um usuário pelo ID
-     * Retorna null se não encontrar (igual ao seu código original)
      */
     public UserDTO getUserById(Integer id) {
+        // IDs são exatos, mantemos o =. Não precisa de ORDER BY pois retorna 1 linha.
         String query_sql = """
             SELECT 
                 U.id,
@@ -82,7 +84,6 @@ public class UserRepository {
             WHERE U.id = ?
         """;
 
-        // Estratégia: Buscamos uma lista. Se tiver algo, pegamos o primeiro.
         List<UserDTO> result = jdbcTemplate.query(query_sql, this::mapRowToDto, id);
 
         return result.isEmpty() ? null : result.get(0);
@@ -92,6 +93,7 @@ public class UserRepository {
      * 3) Buscar usuários por sobrenome
      */
     public List<UserDTO> getUsersByLastName(String sobrenome) {
+        // Alterado para ILIKE e ordenado pelo primeiro nome
         String query_sql = """
             SELECT 
                 U.id,
@@ -99,14 +101,15 @@ public class UserRepository {
                 U.p_nome,
                 U.sobrenome
             FROM Usuario AS U
-            WHERE U.sobrenome = ?
+            WHERE U.sobrenome ILIKE ?
+            ORDER BY U.p_nome ASC
         """;
 
-        return jdbcTemplate.query(query_sql, this::mapRowToDto, sobrenome);
+        return jdbcTemplate.query(query_sql, this::mapRowToDto, "%" + sobrenome + "%");
     }
 
     // ============================================================
-    // Mapper Auxiliar (Centraliza a lógica de criar o DTO)
+    // Mapper Auxiliar
     // ============================================================
     private UserDTO mapRowToDto(ResultSet rs, int rowNum) throws SQLException {
         UserDTO dto = new UserDTO();

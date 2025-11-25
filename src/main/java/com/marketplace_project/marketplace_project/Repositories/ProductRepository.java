@@ -48,9 +48,9 @@ public class ProductRepository {
             HAVING
                 SUM(PCP.quantidade) > ?
                 AND SUM(PCP.quantidade) < ?
+            ORDER BY P.id ASC
         """;
-        // Nota: Ajustei o HAVING para usar SUM(...) em vez do alias 'saleQuantity'
-        // para garantir compatibilidade total com o padrão SQL, embora Postgres aceite alias.
+        // Adicionado ORDER BY P.id ASC no final
 
         return jdbcTemplate.query(
                 query_sql,
@@ -81,6 +81,7 @@ public class ProductRepository {
             FROM Produto as P
             WHERE P.preco > ? 
               AND P.preco < ?
+            ORDER BY P.id ASC
         """;
 
         return jdbcTemplate.query(
@@ -95,6 +96,7 @@ public class ProductRepository {
     // Busca produtos de um vendedor específico
     // ============================================================
     public List<ProductDTO> getProductsBySellerUser(User user){
+        // Aqui mantemos '=' pois ID de usuário é uma chave exata, não uma busca de texto parcial.
         String query_sql = """
             SELECT 
                 P.id,
@@ -108,6 +110,7 @@ public class ProductRepository {
                 P.texto_anunciado
             FROM Produto as P
             WHERE P.usuario_id = ?
+            ORDER BY P.id ASC
         """;
 
         return jdbcTemplate.query(
