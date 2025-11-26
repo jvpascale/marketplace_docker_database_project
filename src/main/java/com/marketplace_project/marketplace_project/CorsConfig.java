@@ -1,4 +1,4 @@
-package com.marketplace_project.marketplace_project; // Ajuste o pacote se necessario
+package com.marketplace_project.marketplace_project;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -9,8 +9,12 @@ public class CorsConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Aplica a todas as rotas da API
-                .allowedOrigins("http://localhost:3000") // Permite apenas seu Front (segurança) ou "*" para todos
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
+        registry.addMapping("/**")
+                // Adicione também o 127.0.0.1, pois alguns navegadores alternam entre ele e localhost
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT")
+                // PERMITE TODOS OS HEADERS (Essencial se você manda JSON ou Tokens)
+                .allowedHeaders("*")
+                .allowCredentials(true);
     }
 }

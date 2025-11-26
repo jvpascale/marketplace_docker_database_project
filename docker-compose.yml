@@ -1,32 +1,37 @@
 version: '3.8'
 
 services:
-  # Serviço 1: O Banco de Dados
   db:
     image: postgres:15
     container_name: marketplace_db
+    restart: always
     environment:
       POSTGRES_DB: marketplace
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     ports:
       - "5433:5432"
-    # VOLUME: Aqui está o segredo da persistência!
-    # Mapeamos a pasta interna do Postgres para uma pasta local "./pgdata"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
 
-  # Serviço 2: Sua Aplicação Spring Boot
   app:
-    build: .  # Constrói a imagem usando o Dockerfile na pasta atual
+    image: leaolu/marketplace-backend:v1
     container_name: marketplace_app
+    restart: always
     ports:
-      - "8080:8080" # Mapeia a porta 8080 do container para a 8080 do seu PC
+      - "8080:8080"
     depends_on:
-      - db # Só inicia depois que o banco subir
+      - db
     environment:
-      # IMPORTANTE: Aqui sobrescrevemos a URL do banco!
-      # Note que usamos "db" em vez de "localhost"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/marketplace
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+
+  frontend:
+    image: leaolu/frontendbd1:v1
+    container_name: marketplace_frontend
+    restart: always
+    ports:
+      - "3000:80" 
+    depends_on:
+      - app 

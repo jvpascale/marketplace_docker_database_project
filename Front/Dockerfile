@@ -1,36 +1,35 @@
-# Estágio 1: Build
-FROM node:20-alpine as build
+# --- Estágio 1: Build da Aplicação ---
+FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Copia os arquivos de configuração
-COPY package*.json pnpm-lock.yaml ./
+# 1. Copia dependências
+COPY package.json pnpm-lock.yaml* package-lock.json* ./
 
-# --- A CORREÇÃO ESTÁ AQUI ---
-# Adicionamos --legacy-peer-deps para ignorar o conflito de versão do Vite
-RUN npm install --legacy-peer-deps
+# 2. Copia patches (necessário para o pnpm install funcionar)
+COPY patches ./patches
 
-# Copia o código fonte
+# 3. Instala dependências
+RUN if [ -f pnpm-lock.yaml ]; then \
+        npm install -g pnpm && pnpm install; \
+    else \
+        npm ci; \
+    fi
+
+# 4. Copia código fonte
 COPY . .
 
-# Builda o projeto
+# 5. Build (Gera a pasta dist/public para o frontend)
 RUN npm run build
 
-# Estágio 2: Nginx para servir
+# --- Estágio 2: Servidor Nginx (Produção) ---
 FROM nginx:alpine
 
-# Copia o build do estágio anterior
-COPY --from=build /app/dist /usr/share/nginx/html
+# [CORREÇÃO AQUI] Aponta para dist/public em vez de apenas dist
+COPY --from=build /app/dist/public /usr/share/nginx/html
 
-# Configuração do Nginx para React Router
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+# Copia conf do Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
