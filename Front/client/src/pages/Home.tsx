@@ -1,8 +1,25 @@
 import { Link } from 'wouter';
-import { Users, Package, ShoppingCart, Briefcase, Users2, Building2 } from 'lucide-react';
+import { useState } from 'react';
+import { Users, Package, ShoppingCart, Briefcase, Users2, Building2, Database } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { databaseAPI } from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Home() {
+  const [populatingDb, setPopulatingDb] = useState(false);
+  const handlePopulateDatabase = async () => {
+    setPopulatingDb(true);
+    try {
+      await databaseAPI.populateDatabase();
+      toast.success('Database populated successfully!');
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to populate database');
+    } finally {
+      setPopulatingDb(false);
+    }
+  };
+
   const entities = [
     {
       title: 'Users',
@@ -66,7 +83,7 @@ export default function Home() {
             A clean and modern interface to explore and filter data from your API. 
             Connected to <code className="bg-muted px-2 py-1 rounded text-sm">localhost:8080</code>
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 mb-6">
             <div className="text-sm text-muted-foreground">
               ✓ Real-time data from API
             </div>
@@ -77,6 +94,14 @@ export default function Home() {
               ✓ Responsive design
             </div>
           </div>
+          <Button 
+            onClick={handlePopulateDatabase} 
+            disabled={populatingDb}
+            className="gap-2"
+          >
+            <Database className="w-4 h-4" />
+            {populatingDb ? 'Populating Database...' : 'Populate Database'}
+          </Button>
         </div>
       </section>
 

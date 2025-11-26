@@ -1,7 +1,8 @@
 node_modules
 dist
-build
 .git
+.gitignore
+.env
 Dockerfile
-.dockerignore
-
+docker-compose.yml
+pgdata

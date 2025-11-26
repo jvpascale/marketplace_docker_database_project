@@ -13,11 +13,11 @@ const apiClient: AxiosInstance = axios.create({
 
 // User API endpoints
 export const userAPI = {
-  searchByLastName: (lastname: string) =>
-    apiClient.post('/users/search', prepareRequestPayload({ lastname })),
+  getInactiveUsers: (from: string, to: string) =>
+    apiClient.post('/users/inative', prepareRequestPayload({ from, to })),
   
-  getBuyersByPrice: (id: number) =>
-    apiClient.post('/users/buyers/price', prepareRequestPayload({ id })),
+  getBuyersByPrice: (minPrice: number, maxPrice: number) =>
+    apiClient.post('/users/buyers/price', prepareRequestPayload({ minPrice, maxPrice })),
   
   getBuyersByFilter: (category: string, name: string, from: string, to: string) =>
     apiClient.post('/users/buyers/filter', prepareRequestPayload({ category, name, from, to })),
@@ -87,6 +87,12 @@ export const departmentAPI = {
   
   getDepartmentsByEmployeeQuantity: (min: number, max: number) =>
     apiClient.post('/departments/filter/employee-quantity', prepareRequestPayload({ min, max })),
+};
+
+// Database API endpoints
+export const databaseAPI = {
+  populateDatabase: () =>
+    apiClient.post('/database/populate', prepareRequestPayload({})),
 };
 
 export default apiClient;
