@@ -33,6 +33,7 @@ com\marketplace_project\marketplace_project\EntitiesDTOs\FiltersDTO$IdFilter.cla
 com\marketplace_project\marketplace_project\Controllers\EmployeeController.class
 com\marketplace_project\marketplace_project\Entities\Employee.class
 com\marketplace_project\marketplace_project\Controllers\PopulateDatabaseController.class
+com\marketplace_project\marketplace_project\EntitiesDTOs\FiltersDTO$DateFilter.class
 com\marketplace_project\marketplace_project\EntitiesDTOs\FiltersDTO$LocalizationDateFilter.class
 com\marketplace_project\marketplace_project\Services\OrderService.class
 com\marketplace_project\marketplace_project\EntitiesDTOs\FiltersDTO$LocalizationFilter.class

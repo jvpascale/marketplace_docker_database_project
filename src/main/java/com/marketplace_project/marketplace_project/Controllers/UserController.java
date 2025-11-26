@@ -1,10 +1,13 @@
 package com.marketplace_project.marketplace_project.Controllers;
 
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.UserDTO;
 // Importamos os Records específicos do FiltersDTO
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.BuyerFilter;
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.PriceFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.LastNameFilter;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdFilter;
+import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.DateFilter;
 
 
 import com.marketplace_project.marketplace_project.Services.UserService;
@@ -28,8 +31,22 @@ public class UserController {
         this.userService = userService;
     }
 
+
     // ============================================================
-    // 1. Buscar compradores por Categoria, Nome e Data
+    // 2. Buscar compradores por "Preço" em um intervalo de valor.
+    // JSON Esperado: { "minPrice": 10.0, "maxPrice": 500.0 }
+    // ============================================================
+    @PostMapping("/buyers/price")
+    public ResponseEntity<List<UserDTO>> getBuyerUsersByOrderPrice(@RequestBody PriceFilter filter) {
+        // Chama o service passando min e max
+        List<UserDTO> users = userService.getBuyerUsersByOrderPrice(filter.minPrice(), filter.maxPrice());
+
+        // Retorna a lista (vazia ou preenchida) com status 200 OK
+        return ResponseEntity.ok(users);
+    }
+
+    // ============================================================
+    // 1. Buscar todos compradores que compraram determinados produtos por categoria do produto ou nome em um periodo de tempo especifico.
     // JSON Esperado:
     // {
     //   "category": "Eletronicos",
@@ -52,27 +69,14 @@ public class UserController {
     }
 
     // ============================================================
-    // 2. Buscar compradores por "Preço" (ID)
-    // JSON Esperado: { "id": "123" }
+    // 2. Buscar usuarios inativos durante um periodo especifico, sem compra nem vendas.
     // ============================================================
-    @PostMapping("/buyers/price")
-    public ResponseEntity<UserDTO> getBuyerUsersByOrderPrice(@RequestBody IdFilter filter) {
-        UserDTO user = userService.getBuyerUsersByOrderPrice(filter.id());
+    @PostMapping("/inative")
+    public ResponseEntity<List<UserDTO>> getInativeUsersByDate(@RequestBody DateFilter filter) {
+        List<UserDTO> users = userService.getInativeUsersByDate(filter.from(), filter.to());
 
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(user);
+        // Retorna 200 OK com a lista (vazia ou cheia)
+        return ResponseEntity.ok(users);
     }
 
-    // ============================================================
-    // 3. Buscar usuários por sobrenome
-    // JSON Esperado: { "lastname": "Silva" }
-    // ============================================================
-    @PostMapping("/search")
-    public ResponseEntity<List<UserDTO>> getUsersByLastName(@RequestBody LastNameFilter filter) {
-        return ResponseEntity.ok(
-                userService.getUsersByLastName(filter.lastname())
-        );
-    }
 }

@@ -21,12 +21,12 @@ public class UserService {
         return userRepository.getBuyerUsersByOrderCategoryAndDate(category,name,fromTime,toTime);
     }
 
-    public UserDTO getBuyerUsersByOrderPrice(Integer id){
-        return userRepository.getUserById(id);
+    public List<UserDTO> getBuyerUsersByOrderPrice(Float min, Float max){
+        return userRepository.getBuyerUsersByOrderPrice(min,max);
     }
 
     //Sem compras nem vendas
-    public List<UserDTO> getUsersByLastName(String lastname){
-        return userRepository.getUsersByLastName(lastname);
+    public List<UserDTO> getInativeUsersByDate(Date from, Date to){
+        return userRepository.getInativeUsersByDate(from, to);
     }
 }
