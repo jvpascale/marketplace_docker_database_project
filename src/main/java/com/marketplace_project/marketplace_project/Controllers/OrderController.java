@@ -1,7 +1,6 @@
 package com.marketplace_project.marketplace_project.Controllers;
 
 import com.marketplace_project.marketplace_project.Entities.Departament;
-import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO;
 import com.marketplace_project.marketplace_project.EntitiesDTOs.OrderDTO;
 // Importamos os Records específicos do FiltersDTO
 import com.marketplace_project.marketplace_project.EntitiesDTOs.FiltersDTO.IdFilter;
