@@ -12,7 +12,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
   app:
     image: jvpascale/marketplace-backend:v2.2
@@ -32,6 +32,9 @@ services:
     container_name: marketplace_frontend
     restart: always
     ports:
-      - "3000:3000" 
+      - "3000:3000"
     depends_on:
-      - app 
+      - app
+
+volumes:
+  postgres_data:
